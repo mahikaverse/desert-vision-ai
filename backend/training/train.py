@@ -60,7 +60,7 @@ def train():
     # ==========================
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
-
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.5)
     best_val_loss = float("inf")
 
     # ==========================
@@ -107,6 +107,8 @@ def train():
         print(f"Val Loss: {val_loss:.4f}")
 
         # -------- SAVE BEST MODEL --------
+        scheduler.step()
+       
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             torch.save(model.state_dict(), "models/best_model.pth")
